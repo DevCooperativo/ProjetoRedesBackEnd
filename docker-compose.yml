@@ -1,0 +1,56 @@
+version: "3.8"
+
+services:
+  redisdb:
+    container_name: redisdb
+    image: "redis:alpine"
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - projetoredes
+
+  mongodb:
+    container_name: mongodb
+    image: "mongo:latest"
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    networks:
+      - projetoredes
+
+  backend-projetoredes:
+    build:
+      context: .
+    image: backend-projetoredes:latest
+    container_name: backend-projetoredes
+    ports:
+      - "8001:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings__Redis=redisdb:6379
+      - BookStoreDatabase__ConnectionString=mongodb://root:root@mongodb:27017/?authSource=admin
+      - BookStoreDatabase__DatabaseName=BookStore
+      - BookStoreDatabase__BooksCollectionName=Books
+    restart: unless-stopped
+    depends_on:
+      - redisdb
+      - mongodb
+    networks:
+      - projetoredes
+
+networks:
+  projetoredes:
+    name: projetoredes
+    driver: bridge
+
+volumes:
+  mongodb_data:
+  redis_data:
