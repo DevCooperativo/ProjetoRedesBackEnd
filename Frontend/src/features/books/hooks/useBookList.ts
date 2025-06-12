@@ -1,13 +1,13 @@
 import { useState } from "react"
 import { api } from "../../../config/api"
-import type { BookSchemaType } from "../../../validations/BookSchema"
+import type { BookSchemaFilledType } from "../../../validations/BookSchemaFilled"
 
 export const useBookList = () => {
-    const [data, setData] = useState<BookSchemaType[]>([])
+    const [data, setData] = useState<BookSchemaFilledType[]>([])
     async function fetchData() {
         try {
             const response = await api.get("/")
-            setData(response)
+            setData(JSON.parse(response.data))
             return response;
         } catch (err) {
             console.log(err)

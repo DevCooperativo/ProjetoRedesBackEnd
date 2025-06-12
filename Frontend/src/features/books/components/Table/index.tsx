@@ -1,10 +1,25 @@
 import React from "react"
 import { S as StyledTable } from "./style"
-export interface TableProps<T> {
+import type { BookSchemaFilledType } from "../../../../validations/BookSchemaFilled"
+import { Link } from "react-router-dom"
+import { api } from "../../../../config/api"
+import { Button } from "../../../../components/Button/style"
+export interface TableProps {
     names: Record<string, unknown>
-    data: T[]
+    data: BookSchemaFilledType[]
 }
-export const Table = <T,>({ names, data }: TableProps<T>) => {
+export const Table = ({ names, data }: TableProps) => {
+
+    async function handleDelete(id: string) {
+        if (confirm("Deseja deletar o livro?")) {
+            try {
+                await api.delete(`/${id}`)
+                window.location.reload()
+            } catch (err) {
+                console.log(err)
+            }
+        }
+    }
     return (
         <React.Fragment>
             {data.length > 0 && (
@@ -21,7 +36,17 @@ export const Table = <T,>({ names, data }: TableProps<T>) => {
                     <tbody>
                         {data.map((v, index) => (
                             <StyledTable.row key={index}>
-                                <StyledTable.cell>{v as string | number}</StyledTable.cell>
+                                <StyledTable.cell>{v.Id}</StyledTable.cell>
+                                <StyledTable.cell>{v.Name}</StyledTable.cell>
+                                <StyledTable.cell>{v.Price}</StyledTable.cell>
+                                <StyledTable.cell>{v.Category}</StyledTable.cell>
+                                <StyledTable.cell>{v.Author}</StyledTable.cell>
+                                <StyledTable.cell>
+                                    <div className="flex justify-center gap-2">
+                                        <Link to={`/edit/${v.Id}`} state={{ data: v }}><img src={"/pen-to-square-solid.svg"} width={20} height={20} /></Link>
+                                        <Button className="cursor-pointer border-none bg-transparent p-0" onClick={() => handleDelete(v.Id)}><img src={"/trash-solid.svg"} width={20} height={20} /></Button>
+                                    </div>
+                                </StyledTable.cell>
                             </StyledTable.row>
                         ))}
                     </tbody>

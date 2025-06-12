@@ -7,6 +7,7 @@ using ProjetoRedesBackEnd.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors();
 
 builder.Services.Configure<BookStoreDatabaseSettings>(
     builder.Configuration.GetSection("BookStoreDatabase"));
@@ -36,6 +37,13 @@ builder.Services.AddHealthChecks()
     .AddRedis(builder.Configuration.GetConnectionString("Redis") ?? "");
 
 var app = builder.Build();
+
+app.UseCors(builder =>
+{
+    builder.AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+});
 
 app.MapOpenApi();
 app.UseSwaggerUI(options =>

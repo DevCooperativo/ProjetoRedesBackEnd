@@ -4,16 +4,18 @@ import { useBookCreate } from "../hooks/useBookCreate"
 import { Input } from "../../../components/Input";
 import { InputTypes } from "../../../components/Input/InputsTypes";
 import { BookSchema, type BookSchemaType } from "../../../validations/BookSchema";
+import { useNavigate } from "react-router-dom";
 
 export const BookCreate = () => {
     const schema = BookSchema();
     const defaultValue: BookSchemaType = {
         Name: "",
-        price: 0,
-        category: "",
-        author: ""
+        Price: 0,
+        Category: "",
+        Author: ""
     }
-    const bookCreate = useBookCreate({schema, defaultValue});
+    const navigate = useNavigate();
+    const bookCreate = useBookCreate({schema, defaultValue, navigate});
     console.log("a")
     return (
         <React.Fragment>
@@ -26,17 +28,17 @@ export const BookCreate = () => {
                             label="Nome"
                         />
                         <Input
-                            {...bookCreate.methods.register("author")}
+                            {...bookCreate.methods.register("Author")}
                             inputType={InputTypes.text}
                             label="Autor"
                         />
                         <Input
-                            {...bookCreate.methods.register("price")}
+                            {...bookCreate.methods.register("Price")}
                             inputType={InputTypes.number}
                             label="Preço"
                         />
                         <Input
-                            {...bookCreate.methods.register("category")}
+                            {...bookCreate.methods.register("Category")}
                             inputType={InputTypes.text}
                             label="Categoria"
                         />

@@ -1,28 +1,28 @@
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useForm, type SubmitErrorHandler, type SubmitHandler } from "react-hook-form"
-import { type BookSchemaType } from "../../../validations/BookSchema"
+import { type BookSchemaFilledType } from "../../../validations/BookSchemaFilled"
 import type { ObjectSchema } from "yup"
 import { api } from "../../../config/api"
 import type { useNavigate } from "react-router-dom"
 
-export interface useBookCreateProps {
-    schema: ObjectSchema<BookSchemaType>,
-    defaultValue: BookSchemaType,
+export interface useBookEditProps {
+    schema: ObjectSchema<BookSchemaFilledType>,
+    defaultValue: BookSchemaFilledType,
     navigate: ReturnType<typeof useNavigate>
 }
 
-export const useBookCreate = ({ schema, defaultValue, navigate }: useBookCreateProps) => {
+export const useBookEdit = ({ schema, defaultValue, navigate }: useBookEditProps) => {
     const methods = useForm({ defaultValues: defaultValue, resolver: yupResolver(schema) })
 
-    const handleSubmit: SubmitHandler<BookSchemaType> = async (data) => {
+    const handleSubmit: SubmitHandler<BookSchemaFilledType> = async (data) => {
         try {
-            await api.post("/", JSON.stringify(data))
+            await api.put(`/${data.Id}`, JSON.stringify(data))
             navigate("/", { replace: true })
         } catch (err) {
             console.log(err)
         }
     }
-    const handleError: SubmitErrorHandler<BookSchemaType> = async (data) => {
+    const handleError: SubmitErrorHandler<BookSchemaFilledType> = async (data) => {
         console.log(methods.getValues())
         console.log("erro", data)
     }

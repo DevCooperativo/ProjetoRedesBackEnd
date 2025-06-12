@@ -32,7 +32,7 @@ public class BooksController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Post(Book newBook)
+    public async Task<IActionResult> Post([FromBody]Book newBook)
     {
         await _booksService.CreateAsync(newBook);
 
@@ -40,7 +40,7 @@ public class BooksController : ControllerBase
     }
 
     [HttpPut("{id:length(24)}")]
-    public async Task<IActionResult> Update(string id, Book updatedBook)
+    public async Task<IActionResult> Update(string id, [FromBody]Book updatedBook)
     {
         var book = await _booksService.GetAsync(id);
 
