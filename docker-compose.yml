@@ -27,7 +27,7 @@ services:
 
   backend-projetoredes:
     build:
-      context: .
+      context: ./Backend
     image: backend-projetoredes:latest
     container_name: backend-projetoredes
     ports:
@@ -45,6 +45,18 @@ services:
       - mongodb
     networks:
       - projetoredes
+
+  frontend-projetoredes:
+    build:
+      context: ./Frontend
+    image: frontend-projetoredes:latest
+    container_name: frontend-projetoredes
+    ports:
+      - "5173:5173"
+    networks:
+      - projetoredes
+    depends_on:
+      - backend-projetoredes
 
 networks:
   projetoredes:
