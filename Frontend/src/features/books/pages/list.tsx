@@ -7,7 +7,7 @@ export const BooksList = () => {
     const bookList = useBookList();
     useEffect(() => {
         bookList.fetchData()
-    })
+    },[])
     return (
         <React.Fragment>
             <div className="w-full">
