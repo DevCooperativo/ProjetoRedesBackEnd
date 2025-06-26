@@ -1,6 +1,18 @@
 version: "3.8"
 
 services:
+  nginx-proxy:
+    image: nginx:latest
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - ./ProxyReverso/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - frontend-projetoredes
+      - backend-projetoredes 
+    networks:
+      - projetoredes
   redisdb:
     container_name: redisdb
     image: "redis:alpine"
